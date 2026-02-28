@@ -1,0 +1,175 @@
+name: Sync data
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: "Sync scope"
+        required: true
+        type: choice
+        options: [one, all]
+        default: all
+      repo:
+        description: "Repo name (required if scope=one). Example: my-repo"
+        required: false
+        type: string
+      include_archived:
+        description: "Include archived repositories"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync data (labels + shared workflows)
+        env:
+          GH_TOKEN: ${{ secrets.DATA_SYNC_TOKEN }}
+          ORG: ${{ github.repository_owner }}
+          SCOPE: ${{ inputs.scope }}
+          REPO: ${{ inputs.repo }}
+          INCLUDE_ARCHIVED: ${{ inputs.include_archived }}
+        run: |
+          set -euo pipefail
+
+          if [ ! -f "labels.json" ]; then
+            echo "labels.json not found in repo root."
+            exit 1
+          fi
+
+          if [ ! -d ".github/workflows/shared" ]; then
+            echo ".github/workflows/shared not found. Create it and put workflows to distribute there."
+            exit 1
+          fi
+
+          replace_labels() {
+            local repo_full
+            repo_full="$1"
+
+            echo "==> Replacing labels in ${repo_full}"
+
+            gh api "repos/${repo_full}/labels" --paginate -q '.[].name' | while read -r label_name
+            do
+              if [ -z "${label_name}" ]; then
+                continue
+              fi
+
+              encoded_label="$(printf '%s' "${label_name}" | jq -sRr @uri)"
+              gh api -X DELETE "repos/${repo_full}/labels/${encoded_label}" >/dev/null
+            done
+
+            jq -c '.[]' labels.json | while read -r label_entry
+            do
+              local label_name
+              local label_color
+              local label_description
+
+              label_name="$(printf '%s' "${label_entry}" | jq -r '.name')"
+              label_color="$(printf '%s' "${label_entry}" | jq -r '.color')"
+              label_description="$(printf '%s' "${label_entry}" | jq -r '.description // ""')"
+
+              gh api -X POST "repos/${repo_full}/labels" \
+                -f "name=${label_name}" \
+                -f "color=${label_color}" \
+                -f "description=${label_description}" \
+                >/dev/null
+            done
+          }
+
+          upsert_file() {
+            local repo_full
+            local source_file
+            local target_path
+            local file_sha
+            local content_b64
+
+            repo_full="$1"
+            source_file="$2"
+            target_path="$3"
+
+            content_b64="$(base64 -w 0 "${source_file}")"
+
+            file_sha="$(
+              gh api "repos/${repo_full}/contents/${target_path}" \
+                -q '.sha' 2>/dev/null || true
+            )"
+
+            if [ -n "${file_sha}" ]; then
+              echo "    updating ${target_path}"
+              gh api -X PUT "repos/${repo_full}/contents/${target_path}" \
+                -f "message=chore: sync shared workflow (${target_path})" \
+                -f "content=${content_b64}" \
+                -f "sha=${file_sha}" \
+                >/dev/null
+            else
+              echo "    creating ${target_path}"
+              gh api -X PUT "repos/${repo_full}/contents/${target_path}" \
+                -f "message=chore: add shared workflow (${target_path})" \
+                -f "content=${content_b64}" \
+                >/dev/null
+            fi
+          }
+
+          sync_shared_workflows() {
+            local repo_full
+            repo_full="$1"
+
+            echo "==> Syncing shared workflows to ${repo_full}"
+
+            shopt -s nullglob
+            local shared_files=(.github/workflows/shared/*.yml .github/workflows/shared/*.yaml)
+
+            if [ "${#shared_files[@]}" -eq 0 ]; then
+              echo "No workflow files found in .github/workflows/shared (expected *.yml or *.yaml)."
+              return 0
+            fi
+
+            for source_file in "${shared_files[@]}"
+            do
+              local file_name
+              local target_path
+
+              file_name="$(basename "${source_file}")"
+              target_path=".github/workflows/${file_name}"
+
+              upsert_file "${repo_full}" "${source_file}" "${target_path}"
+            done
+          }
+
+          sync_repo() {
+            local repo_full
+            repo_full="$1"
+
+            replace_labels "${repo_full}"
+            sync_shared_workflows "${repo_full}"
+          }
+
+          if [ "${SCOPE}" = "one" ]; then
+            if [ -z "${REPO}" ]; then
+              echo "Input 'repo' is required when scope=one."
+              exit 1
+            fi
+            sync_repo "${ORG}/${REPO}"
+            exit 0
+          fi
+
+          if [ "${INCLUDE_ARCHIVED}" = "true" ]; then
+            repo_query='.[] | .name'
+          else
+            repo_query='.[] | select(.archived == false) | .name'
+          fi
+
+          gh api "orgs/${ORG}/repos?per_page=100" --paginate -q "${repo_query}" | while read -r repo_name
+          do
+            if [ -z "${repo_name}" ]; then
+              continue
+            fi
+            sync_repo "${ORG}/${repo_name}"
+          done

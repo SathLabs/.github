@@ -1,0 +1,118 @@
+name: Crash Report
+description: Report a crash or hard failure (client or dedicated server)
+title: "[Crash]: "
+type: crash
+labels:
+  - "type/crash"
+  - "status/unconfirmed"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Reproduce on the **latest version** first.
+        If you can reproduce, include clear steps and logs.
+
+  - type: checkboxes
+    attributes:
+      label: Existing issues
+      description: Search existing issues before creating a new one.
+      options:
+        - label: I searched for existing issues and did not find a duplicate
+          required: true
+
+  - type: dropdown
+    id: side
+    attributes:
+      label: Side
+      description: Where does the crash happen?
+      options:
+        - side/client
+        - side/server
+        - side/both
+    validations:
+      required: true
+
+  - type: input
+    id: mc_version
+    attributes:
+      label: Minecraft Version
+      placeholder: "1.21.1"
+    validations:
+      required: true
+
+  - type: input
+    id: mod_version
+    attributes:
+      label: Mod Version
+      placeholder: "1.2.3"
+    validations:
+      required: true
+
+  - type: textarea
+    id: other_mods
+    attributes:
+      label: Other mods
+      description: If not isolated to just this mod, list relevant mods.
+      placeholder: |
+        None
+        OR
+        Example-Mod: 1.21.1-1.0.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: modpack
+    attributes:
+      label: Modpack (if applicable)
+      placeholder: |
+        AllTheMods 10
+        4.0
+    validations:
+      required: false
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: If the crash is random, describe what you were doing leading up to it.
+      placeholder: |
+        1. ...
+        2. ...
+        3. Crash occurs
+    validations:
+      required: true
+
+  - type: input
+    id: crash_report
+    attributes:
+      label: Crash report link (required if available)
+      description: Upload the crash report file to https://mclo.gs/ and paste the link. Located in `/<instance>/crash-reports/`.
+      placeholder: "https://mclo.gs/..."
+    validations:
+      required: false
+
+  - type: input
+    id: latest_log
+    attributes:
+      label: latest.log link
+      description: Upload to https://mclo.gs/ and paste the link. Located in `/<instance>/logs/latest.log`.
+      placeholder: "https://mclo.gs/..."
+    validations:
+      required: true
+
+  - type: input
+    id: debug_log
+    attributes:
+      label: debug.log link (optional)
+      description: Upload to https://mclo.gs/ and paste the link. Located in `/<instance>/logs/debug.log`.
+      placeholder: "https://mclo.gs/..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional context
+      description: Include screenshots/video and any relevant details.
+    validations:
+      required: false

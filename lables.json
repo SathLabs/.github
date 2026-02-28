@@ -1,0 +1,14 @@
+[
+  { "name": "side/server", "color": "ff69b4", "description": "Issue only happens on dedicated servers. Client / Singleplayer are fine" },
+  { "name": "side/client", "color": "ff69b4", "description": "Issue only happens on the Client / in Singleplayer. Dedicated server is fine" },
+  { "name": "side/both", "color": "ff69b4", "description": "Issue happens on both Client and Dedicated Server" },
+
+  { "name": "status/unconfirmed", "color": "ffa500", "description": "Not yet confirmed" },
+  { "name": "status/confirmed", "color": "2ea44f", "description": "Confirmed" },
+  { "name": "status/in-progress", "color": "ffd33d", "description": "Work in progress" },
+
+  { "name": "type/bug", "color": "ffa500", "description": "Bug" },
+  { "name": "type/crash", "color": "d73a4a", "description": "Crash" },
+  { "name": "type/enhancement", "color": "0366d6", "description": "Enhancement / Change to a feature" },
+  { "name": "type/request", "color": "6f42c1", "description": "Request a new feature" }
+]

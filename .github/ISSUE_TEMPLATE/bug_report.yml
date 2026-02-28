@@ -1,0 +1,125 @@
+name: Bug Report
+description: Report incorrect behavior that does not crash the game
+title: "[Bug]: "
+type: bug
+labels:
+  - "type/bug"
+  - "status/unconfirmed"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing, reproduce this on the **latest version** of the mod.
+        If this is a crash, use the **Crash Report** template instead.
+
+  - type: checkboxes
+    attributes:
+      label: Existing issues
+      description: Search existing issues before creating a new one.
+      options:
+        - label: I searched for existing issues and did not find a duplicate
+          required: true
+
+  - type: dropdown
+    id: side
+    attributes:
+      label: Side
+      description: Where does this issue occur?
+      options:
+        - side/client
+        - side/server
+        - side/both
+    validations:
+      required: true
+
+  - type: input
+    id: mc_version
+    attributes:
+      label: Minecraft Version
+      placeholder: "1.21.1"
+    validations:
+      required: true
+
+  - type: input
+    id: mod_version
+    attributes:
+      label: Mod Version
+      placeholder: "1.2.3"
+    validations:
+      required: true
+
+  - type: textarea
+    id: other_mods
+    attributes:
+      label: Other mods
+      description: Did this happen with only this mod installed? If not, list relevant mods.
+      placeholder: |
+        None
+        OR
+        Example-Mod: 1.21.1-1.0.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: modpack
+    attributes:
+      label: Modpack (if applicable)
+      description: Pack name + version if this occurred in a modpack.
+      placeholder: |
+        AllTheMods 10
+        4.0
+    validations:
+      required: false
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: What happened instead?
+    validations:
+      required: true
+
+  - type: input
+    id: latest_log
+    attributes:
+      label: latest.log link
+      description: Upload to https://mclo.gs/ and paste the link. Located in `/<instance>/logs/latest.log`.
+      placeholder: "https://mclo.gs/..."
+    validations:
+      required: false
+
+  - type: input
+    id: debug_log
+    attributes:
+      label: debug.log link (optional)
+      description: Upload to https://mclo.gs/ and paste the link. Located in `/<instance>/logs/debug.log`.
+      placeholder: "https://mclo.gs/..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional context
+      description: Screenshots, videos, or extra notes.
+    validations:
+      required: false
