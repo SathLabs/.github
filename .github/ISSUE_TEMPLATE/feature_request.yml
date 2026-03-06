@@ -3,18 +3,17 @@ description: Suggest a new feature or change
 title: "[Feature]: "
 type: feature
 labels:
-  - "type/request"
   - "status/unconfirmed"
 body:
   - type: markdown
     attributes:
       value: |
-        Provide enough detail that someone can implement this without guessing.
+        Provide enough detail that someone can implement this without having to guess what you're looking for.
 
   - type: checkboxes
     attributes:
       label: Existing issues
-      description: Search existing issues before creating a new one.
+      description: Search existing request before creating a new one.
       options:
         - label: I searched for existing issues and did not find a duplicate
           required: true
@@ -45,8 +44,8 @@ body:
   - type: textarea
     id: problem
     attributes:
-      label: Problem / motivation
-      placeholder: What problem are you trying to solve?
+      label: Motivation
+      placeholder: What problem are you trying to solv? Why do you think this feature should be added or changed?
     validations:
       required: true
 
@@ -62,7 +61,7 @@ body:
     id: alternatives
     attributes:
       label: Alternatives considered
-      placeholder: What other approaches did you consider?
+      placeholder: Did you consider any alternative solutions other than the proposed one? Can this already be solved with another mod?
     validations:
       required: false
 
