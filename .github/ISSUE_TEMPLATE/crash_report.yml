@@ -1,5 +1,5 @@
 name: Crash Report
-description: Report a crash or hard failure (client or dedicated server)
+description: Report a crash
 title: "[Crash]: "
 type: crash
 labels:
@@ -9,8 +9,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        Reproduce on the **latest version** first.
-        If you can reproduce, include clear steps and logs.
+        Before filing, reproduce this on the **latest version** of the mod.
+        If this is a bug that does not cause a crash, use the **Bug Report** template instead.
 
   - type: checkboxes
     attributes:
@@ -24,7 +24,7 @@ body:
     id: side
     attributes:
       label: Side
-      description: Where does the crash happen?
+      description: Where does the crash happen? If unsure pick both.
       options:
         - side/client
         - side/server
@@ -54,11 +54,9 @@ body:
       label: Other mods
       description: If not isolated to just this mod, list relevant mods.
       placeholder: |
-        None
-        OR
         Example-Mod: 1.21.1-1.0.0
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: modpack
@@ -74,7 +72,7 @@ body:
     id: steps
     attributes:
       label: Steps to reproduce
-      description: If the crash is random, describe what you were doing leading up to it.
+      description: If the crash is random, describe what you were doing leading up to it as best you can.
       placeholder: |
         1. ...
         2. ...
@@ -85,11 +83,11 @@ body:
   - type: input
     id: crash_report
     attributes:
-      label: Crash report link (required if available)
-      description: Upload the crash report file to https://mclo.gs/ and paste the link. Located in `/<instance>/crash-reports/`.
+      label: Crash report link
+      description: Upload the crash report file to https://mclo.gs/ and paste the link. Located in `/<instance>/crash-reports/` or `/<instance>/hs_err_pid<number>.log`. Make sure to pick the correct log related to the crash!
       placeholder: "https://mclo.gs/..."
     validations:
-      required: false
+      required: true
 
   - type: input
     id: latest_log
