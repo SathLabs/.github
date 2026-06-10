@@ -24,7 +24,7 @@ body:
     id: side
     attributes:
       label: Side
-      description: Where does this issue occur?
+      description: Where does this issue occur? If unsure pick both.
       options:
         - side/client
         - side/server
@@ -54,11 +54,9 @@ body:
       label: Other mods
       description: Did this happen with only this mod installed? If not, list relevant mods.
       placeholder: |
-        None
-        OR
         Example-Mod: 1.21.1-1.0.0
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: modpack
@@ -120,6 +118,6 @@ body:
     id: extra
     attributes:
       label: Additional context
-      description: Screenshots, videos, or extra notes.
+      description: Screenshots, videos, anything else you think may be relevant.
     validations:
       required: false
