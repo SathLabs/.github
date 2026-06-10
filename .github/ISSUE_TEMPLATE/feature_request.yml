@@ -22,7 +22,7 @@ body:
     id: side
     attributes:
       label: Side
-      description: Where would this feature apply?
+      description: Where would this feature apply? If unsure pick both.
       options:
         - side/client
         - side/server
@@ -42,25 +42,25 @@ body:
       required: true
 
   - type: textarea
-    id: problem
+    id: proposal
     attributes:
-      label: Motivation
-      placeholder: What problem are you trying to solv? Why do you think this feature should be added or changed?
+      label: Proposal 
+      placeholder: Describe what you want to happen.
     validations:
       required: true
 
   - type: textarea
-    id: proposal
+    id: problem
     attributes:
-      label: Proposed solution
-      placeholder: Describe what you want to happen.
+      label: Reason
+      placeholder: Why do you think this feature should be added or changed?
     validations:
       required: true
 
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternatives considered
+      label: Alternatives
       placeholder: Did you consider any alternative solutions other than the proposed one? Can this already be solved with another mod?
     validations:
       required: false
@@ -69,6 +69,6 @@ body:
     id: extra
     attributes:
       label: Additional context
-      description: Mockups, references, related mods, etc.
+      description: References, related mods, anything else you think may be relevant.
     validations:
       required: false
